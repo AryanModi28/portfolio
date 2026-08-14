@@ -4036,6 +4036,29 @@ h6,
     color: rgba(255,255,255,.97) !important;
     font-weight: 700;
 }
+.hero-title {
+    background: linear-gradient(
+        100deg,
+        #7fd8ff 0%,
+        #a78bfa 30%,
+        #f472b6 55%,
+        #a78bfa 80%,
+        #7fd8ff 100%
+    ) !important;
+    background-size: 200% auto !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    color: transparent !important;
+    animation: heroTitleShine 6s ease-in-out infinite;
+}
+
+@keyframes heroTitleShine {
+    0% { background-position: 0% center; }
+    50% { background-position: 100% center; }
+    100% { background-position: 0% center; }
+}
+
 
 /* Small labels / metadata */
 .section-label,
