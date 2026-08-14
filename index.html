@@ -527,19 +527,16 @@
             letter-spacing: -.09em;
             background:
                 linear-gradient(
-                    100deg,
-                    #7fd8ff 0%,
-                    #a78bfa 30%,
-                    #f472b6 55%,
-                    #a78bfa 80%,
-                    #7fd8ff 100%
+                    180deg,
+                    #ffffff 0%,
+                    #dadadd 48%,
+                    #777980 100%
                 );
             -webkit-background-clip: text;
             background-clip: text;
-            -webkit-text-fill-color: transparent !important;
             color: transparent;
             animation:
-                heroTitleShine 6s ease-in-out infinite;
+                heroIn 1s .2s var(--transition) both;
         }
 
         .hero-title::after {
@@ -602,12 +599,6 @@
 
             animation:
                 heroIn 1s .4s var(--transition) both;
-        }
-
-        @keyframes heroTitleShine {
-            0% { background-position: 0% center; }
-            50% { background-position: 100% center; }
-            100% { background-position: 0% center; }
         }
 
         @keyframes heroIn {
