@@ -4770,6 +4770,16 @@ footer {
 </head>
 
 <body>
+
+    <!-- Netlify Forms detection form. Hidden because the visible contact UI is the terminal above/below. -->
+    <form name="portfolio-contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" hidden>
+        <input type="hidden" name="form-name" value="portfolio-contact">
+        <input type="text" name="bot-field">
+        <input type="text" name="name">
+        <input type="email" name="email">
+        <textarea name="message"></textarea>
+    </form>
+
         <canvas id="developerCanvas" aria-hidden="true"></canvas>
         <div class="developer-hud" aria-hidden="true">
             <div class="scan-beam"></div>
@@ -5829,8 +5839,6 @@ footer {
 
         if (!root || !output || !input) return;
 
-        const CONTACT_ENDPOINT = "";
-        const CONTACT_EMAIL = "aryanmodi12396@gmail.com";
 
         let terminalModeState = "command";
         let contactStep = 0;
@@ -5996,42 +6004,26 @@ footer {
                     setTimeout(resolve, 350);
                 });
 
-                if (CONTACT_ENDPOINT) {
-                    const response = await fetch(CONTACT_ENDPOINT, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(contactData)
-                    });
+                const formBody = new URLSearchParams();
+                formBody.append("form-name", "portfolio-contact");
+                formBody.append("name", contactData.name);
+                formBody.append("email", contactData.email);
+                formBody.append("message", contactData.message);
 
-                    if (!response.ok) {
-                        throw new Error("Request failed");
-                    }
+                const response = await fetch("/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    body: formBody.toString()
+                });
 
-                    addMessage("SENT", "Message transmitted successfully.", "success");
-                    addMessage("DONE", "Thank you. The communication channel is now closed.", "success");
-                } else {
-                    addMessage("SETUP", "The message is ready, but delivery is not configured yet.", "system");
-                    addMessage(
-                        "ACTION",
-                        "Set CONTACT_ENDPOINT or CONTACT_EMAIL to enable real delivery.",
-                        "system"
-                    );
-
-                    if (CONTACT_EMAIL && CONTACT_EMAIL !== "YOUR_EMAIL@example.com") {
-                        const subject = encodeURIComponent("Portfolio message from " + contactData.name);
-                        const body = encodeURIComponent(
-                            "Name: " + contactData.name +
-                            "\nEmail: " + contactData.email +
-                            "\n\n" + contactData.message
-                        );
-
-                        addMessage("MAIL", "Opening your email client...", "success");
-                        window.location.href =
-                            "mailto:" + CONTACT_EMAIL +
-                            "?subject=" + subject +
-                            "&body=" + body;
-                    }
+                if (!response.ok) {
+                    throw new Error("Netlify form submission failed");
                 }
+
+                addMessage("SENT", "Message transmitted successfully.", "success");
+                addMessage("DONE", "Thank you. The communication channel is now closed.", "success");
             } catch (error) {
                 addMessage("ERROR", "Transmission failed. Please try again.", "error");
             } finally {
